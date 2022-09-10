@@ -5,11 +5,11 @@ const catchErrorAsync = require("../utils/catchUtil");
 const bcrypt = require("bcrypt");
 const AppError = require("../utils/appError");
 const Register = catchErrorAsync(async (req, res, next) => {
-   const { name, email, password } = req.body;
+   const { name, email, password,role } = req.body;
 
    const hashPAssword = await bcrypt.hash(password, 12);
 
-   const user = await UserModel.create({ name, email, password: hashPAssword });
+   const user = await UserModel.create({ name, email, password: hashPAssword,role });
 
    jwtToken(user, 200, res);
 });
@@ -33,13 +33,23 @@ const login = catchErrorAsync(async (req, res, next) => {
 });
 
 const Logout = catchErrorAsync(async (req, res) => {
-    res.clearCookie("token", null, {
-       maxAge: new Date(Date.now()),
-       httpOnly: true,
-    });
-    res.status(200).json({
-       message: true,
-       message: "Logout User",
-    });
- });
-module.exports = { Register, login,Logout };
+   res.clearCookie("token", null, {
+      maxAge: new Date(Date.now()),
+      httpOnly: true,
+   });
+   res.status(200).json({
+      message: true,
+      message: "Logout User",
+   });
+});
+
+const getUserDetails = catchErrorAsync(async (req, res, next) => {
+   const user = await UserModel.findById(req.user.id);
+   res.status(200).json({
+      message: true,
+      user,
+   });
+});
+
+
+module.exports = { Register, login, Logout, getUserDetails };
