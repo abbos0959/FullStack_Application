@@ -14,7 +14,11 @@ let storage = multer.diskStorage({
 let upload = multer({
    storage: storage,
    fileFilter: function (req, file, callback) {
-      if (file.mimetype == "image/jpg" || file.mimetype == "image/png") {
+      if (
+         file.mimetype == "image/jpg" ||
+         file.mimetype == "image/png" ||
+         file.mimetype == "image/jpeg"
+      ) {
          callback(null, true);
       } else {
          console.log("jpg yoki png file yuklash kerak");

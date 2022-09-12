@@ -14,4 +14,15 @@ router
    )
    .get(productController.getAll);
 
+router
+   .route("/product/:id")
+   .get(Auth.Isauthentication, productController.productById)
+   .delete(Auth.Isauthentication, Auth.authoriseRoles(1), productController.remove)
+   .patch(
+      Auth.Isauthentication,
+      Auth.authoriseRoles(1),
+      upload.single("photo"),
+      productController.updateProduct
+   );
+
 module.exports = router;
